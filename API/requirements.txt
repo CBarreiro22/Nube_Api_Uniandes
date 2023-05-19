@@ -24,4 +24,4 @@ google-cloud-pubsub
 google
 google-cloud-core
 google-cloud-storage
-google-cloud-python
+google-cloud
