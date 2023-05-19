@@ -25,3 +25,4 @@ google
 google-cloud-core
 google-cloud-storage
 google-cloud
+google-api-python-client
