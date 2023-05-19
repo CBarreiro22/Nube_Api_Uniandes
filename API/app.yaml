@@ -5,6 +5,9 @@ entrypoint: gunicorn -b :$PORT app:app
 runtime_config:
   operating_system: ubuntu22
 
+env_variables:
+  CLOUD_STORAGE_BUCKET: bionic-trilogy-123902
+
 manual_scaling:
   instances: 1
 resources:
