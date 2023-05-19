@@ -22,4 +22,5 @@ gunicorn==20.1.0
 wheel
 google-cloud-pubsub
 google
+google-cloud-core
 google-cloud-storage
