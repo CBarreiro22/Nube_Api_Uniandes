@@ -23,6 +23,6 @@ wheel
 google-cloud-pubsub
 google
 google-cloud-core
---upgrade google-cloud-storage
+google-cloud-storage
 google-cloud
---upgrade google-api-python-client
+google-api-python-client
