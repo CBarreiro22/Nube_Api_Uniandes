@@ -1,5 +1,7 @@
 # Usamos una imagen base de Python
 FROM python:3.9
+# Establecemos el directorio de trabajo en el contenedor
+WORKDIR /
 # Copiamos los archivos de requerimientos al contenedor
 COPY requirements.txt .
 # Instalamos las dependencias del proyecto
