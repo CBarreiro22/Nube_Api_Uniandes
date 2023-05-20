@@ -10,6 +10,6 @@ gcloud run deploy prueba \
   --set-env-vars "DB_HOST=10.188.0.4" \
   --set-env-vars "DB_USER=admin" \
   --set-env-vars "DB_PASSWORD=admin" \
-  --set-env-vars"DB_NAME=apisnube" \
+  --set-env-vars "DB_NAME=apisnube" \
   --set-env-vars "DB_PORT=5432"
 
