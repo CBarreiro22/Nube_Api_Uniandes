@@ -1,5 +1,4 @@
 from flask import Flask
-from .modelos import db, Tarea
 import io
 import shutil
 import tarfile
@@ -9,6 +8,7 @@ from google.cloud import pubsub_v1
 import logging
 from google.cloud import storage
 import os
+from modelos import db, Tarea
 
 bucket_name = 'pruebaapisnube'
 
