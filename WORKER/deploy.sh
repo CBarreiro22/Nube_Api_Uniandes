@@ -3,7 +3,7 @@ gcloud builds submit \
 gcloud run deploy prueba \
   --image gcr.io/$GOOGLE_CLOUD_PROJECT/prueba \
   --platform managed \
-  --region us-east1 \
+  --region us-central1 \
   --allow-unauthenticated \
   --max-instances=1 \
   --port=5000
