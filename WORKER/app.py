@@ -15,19 +15,16 @@ bucket_name = 'pruebaapisnube'
 # Configuración del registro para la consola
 logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', level=logging.DEBUG)
 
-IP = '10.128.0.5'
+IP = '10.188.0.4'
 
 
-def create_app(config_name):
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://admin:admin@{IP}:5432/apisnube'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['PROPAGATE_EXCEPTIONS'] = True
-    db.init_app(app)
-    return app
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://admin:admin@{IP}:5432/apisnube'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
+app.debug = True
+db.init_app(app)
 
-
-app = create_app('default')
 app_context = app.app_context()
 app_context.push()
 db.create_all()
