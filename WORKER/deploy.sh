@@ -12,5 +12,5 @@ gcloud compute firewall-rules create prueba-cloud \
 --destination-ranges=10.188.0.0/24 \
 --direction=EGRESS \
 --network=red-new \
---target-tags=vpc_tag
+--target-tags=vpc-tag
 
