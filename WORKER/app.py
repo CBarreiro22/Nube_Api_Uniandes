@@ -143,7 +143,7 @@ def convert_file_7z(id_task, file):
         archivo.write(archive_bytes)
     # tarea.file_data_converted = archive_bytes
     # db.session.commit()
-    upload_file_to_gcs(bucket_name, file.lstrip("/tmp/")+".7z", file+".7z")
+    upload_file_to_gcs(bucket_name, file+".7z", file .lstrip("/tmp/")+".7z")
     # delete the temporary directory
     shutil.rmtree(tmp_dir)
     shutil.rmtree(file)
