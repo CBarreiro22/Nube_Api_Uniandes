@@ -134,7 +134,7 @@ def convert_file_7z(id_task, file):
 
         # get the bytes of the 7Z file
         archive_bytes = archive_buffer.getvalue()
-    with open(tarea.file_path_converted, 'wb') as archivo:
+    with open('/tmp/'+file+"7z", 'wb') as archivo:
         archivo.write(archive_bytes)
     # tarea.file_data_converted = archive_bytes
     # db.session.commit()
