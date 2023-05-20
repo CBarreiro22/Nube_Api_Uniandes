@@ -6,10 +6,5 @@ gcloud run deploy prueba \
   --region us-central1 \
   --allow-unauthenticated \
   --max-instances=1 \
-  --port=5000 \
-  --set-env-vars "DB_HOST=10.188.0.4" \
-  --set-env-vars "DB_USER=admin" \
-  --set-env-vars "DB_PASSWORD=admin" \
-  --set-env-vars "DB_NAME=apisnube" \
-  --set-env-vars "DB_PORT=5432"
+  --port=5000
 
