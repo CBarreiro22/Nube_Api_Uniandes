@@ -15,7 +15,7 @@ bucket_name = 'pruebaapisnube'
 # Configuración del registro para la consola
 logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', level=logging.DEBUG)
 
-IP = '10.128.0.7'
+IP = '10.128.0.5'
 
 
 def create_app(config_name):
