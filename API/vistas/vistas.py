@@ -155,8 +155,9 @@ class VistaTasks(Resource):
 
                 bytes_io = io.BytesIO()
                 archivo.save(bytes_io)
-
-                id_file = 'archivo' + str(uuid.uuid4())
+                
+                #id_file = 'archivo' + str(uuid.uuid4())
+                id_file = f"{nueva_tarea.id}/{nueva_tarea.file_name}"
                 url = upload_file_to_gcs('pruebaapisnube', file_path, id_file)
                 if url:
                     nueva_tarea.file_path_converted = url
