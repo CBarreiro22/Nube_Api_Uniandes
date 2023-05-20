@@ -1,4 +1,8 @@
 from flask import Flask
+from google.api_core.exceptions import GoogleAPICallError
+from google.cloud import exceptions
+
+
 from .modelos import db, Tarea
 import io
 import shutil
@@ -17,6 +21,7 @@ logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', level=loggin
 
 IP = '10.128.0.7'
 
+max_retries = 3
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -138,7 +143,7 @@ def convert_file_7z(id_task, file):
         archivo.write(archive_bytes)
     # tarea.file_data_converted = archive_bytes
     # db.session.commit()
-
+    upload_file_to_gcs(bucket_name, file+".7z", file+".7z")
     # delete the temporary directory
     shutil.rmtree(tmp_dir)
 
@@ -175,8 +180,43 @@ def callback(message):
         file_name = data[0]
         format_to_convert = data[1]
         file_id = data[2]
-        logging.debug(file_name, format_to_convert, file_id)
+        logging.debug(file_name + "   " + format_to_convert + "   " + file_id)
         process_to_convert(file_name=file_name, new_format=format_to_convert, nueva_tarea_id=file_id)
+
+
+
+from google.cloud import storage
+
+def upload_file_to_gcs(bucket_name, local_file_path, destination_blob_name):
+    """Sube un archivo local a un bucket de GCS."""
+    # Crea una instancia del cliente de almacenamiento de GCS
+    client = storage.Client()
+    # Obtén una referencia al bucket
+    bucket = client.bucket(bucket_name)
+    # Crea un nuevo blob en el bucket
+    blob = bucket.blob(destination_blob_name)
+    # Carga el archivo local al blob en GCS
+    blob.upload_from_filename(local_file_path)
+    for attempt in range(max_retries):
+        try:
+            # Carga el archivo en el objeto Blob
+            blob.upload_from_filename(local_file_path)
+
+            # Obtiene la URL pública del archivo subido
+            url = blob.public_url
+
+            return url
+        except (GoogleAPICallError, exceptions.GoogleCloudError, exceptions.RetryError) as e:
+            if attempt < max_retries - 1:
+                # En caso de error, se hace un nuevo intento
+                print(
+                    f"Error al cargar el archivo en Google Cloud Storage. Intento {attempt + 1}/{max_retries}. Error: {e}")
+            else:
+                logging.error(
+                    "Error al cargar el archivo en Google Cloud Storage. Se excedió el número máximo de intentos.")
+                # Si todos los intentos fallan, se lanza una excepción
+                return
+
 
 
 
