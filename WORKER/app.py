@@ -150,20 +150,16 @@ def get_file_by_id_task(id_task):
         return io.BytesIO(file.read())
 
 
-def process_to_convert(new_format, file_name):
+def process_to_convert(new_format, file_name,nueva_tarea_id):
     logging.debug("process_to_convert !!!!!!!!!!!!!!!!!!!!!!!!!!!!", new_format, file_name)
     file = download_file_from_gcs(file_name)
     logging.debug("file: %s", str(file))
-    # if new_format.upper() == 'TAR.GZ':
-    #     convert_file_tar_gz(nueva_tarea_id, file)
-    # elif new_format.upper() == '7Z':
-    #     convert_file_7z(nueva_tarea_id, file)
-    # elif new_format.upper() == 'TAR.BZ2':
-    #     convert_file_tar_bz2(nueva_tarea_id, file)
-
-
-def enviar_accion(file_name, format_to_convert, file_id):
-    process_to_convert(format_to_convert, file_name)
+    if new_format.upper() == 'TAR.GZ':
+        convert_file_tar_gz(nueva_tarea_id, file)
+    elif new_format.upper() == '7Z':
+        convert_file_7z(nueva_tarea_id, file)
+    elif new_format.upper() == 'TAR.BZ2':
+        convert_file_tar_bz2(nueva_tarea_id, file)
 
 
 
@@ -180,8 +176,8 @@ def callback(message):
         format_to_convert = data[1]
         file_id = data[2]
         logging.debug(file_name, format_to_convert, file_id)
-        enviar_accion(file_name, format_to_convert, file_id)
-        message.ack()  # Confirma la recepción del mensaje
+        process_to_convert(file_name=file_name, new_format=format_to_convert, nueva_tarea_id=file_id)
+
 
 
 def subscribe():
