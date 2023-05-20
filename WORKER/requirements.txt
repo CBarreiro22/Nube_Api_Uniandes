@@ -71,6 +71,7 @@ vine==5.0.0
 wcwidth==0.2.6
 Werkzeug==2.2.3
 zipp==3.15.0
+py7zr
 
 
 
