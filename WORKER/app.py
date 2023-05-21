@@ -1,4 +1,9 @@
 from flask import Flask
+from google.api_core.exceptions import GoogleAPICallError
+from google.cloud import exceptions
+
+
+from .modelos import db, Tarea
 import io
 import shutil
 import tarfile
@@ -8,23 +13,27 @@ from google.cloud import pubsub_v1
 import logging
 from google.cloud import storage
 import os
-from modelos import db, Tarea
 
 bucket_name = 'pruebaapisnube'
 
 # Configuración del registro para la consola
 logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', level=logging.DEBUG)
 
+#IP = '10.128.0.7'
 IP = '35.224.208.182'
 
+max_retries = 3
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://admin:admin@{IP}:5432/apisnube'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PROPAGATE_EXCEPTIONS'] = True
-app.debug = True
-db.init_app(app)
+def create_app(config_name):
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://admin:admin@{IP}:5432/apisnube'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['PROPAGATE_EXCEPTIONS'] = True
+    db.init_app(app)
+    return app
 
+
+app = create_app('default')
 app_context = app.app_context()
 app_context.push()
 db.create_all()
@@ -131,13 +140,14 @@ def convert_file_7z(id_task, file):
 
         # get the bytes of the 7Z file
         archive_bytes = archive_buffer.getvalue()
-    with open(tarea.file_path_converted, 'wb') as archivo:
+    with open(file+".7z", 'wb') as archivo:
         archivo.write(archive_bytes)
     # tarea.file_data_converted = archive_bytes
     # db.session.commit()
-
+    upload_file_to_gcs(bucket_name, file, file.lstrip("/tmp/")+".7z")
     # delete the temporary directory
     shutil.rmtree(tmp_dir)
+
 
 
 def get_file_by_id_task(id_task):
@@ -147,20 +157,16 @@ def get_file_by_id_task(id_task):
         return io.BytesIO(file.read())
 
 
-def process_to_convert(new_format, file_name):
+def process_to_convert(new_format, file_name,nueva_tarea_id):
     logging.debug("process_to_convert !!!!!!!!!!!!!!!!!!!!!!!!!!!!", new_format, file_name)
     file = download_file_from_gcs(file_name)
     logging.debug("file: %s", str(file))
-    # if new_format.upper() == 'TAR.GZ':
-    #     convert_file_tar_gz(nueva_tarea_id, file)
-    # elif new_format.upper() == '7Z':
-    #     convert_file_7z(nueva_tarea_id, file)
-    # elif new_format.upper() == 'TAR.BZ2':
-    #     convert_file_tar_bz2(nueva_tarea_id, file)
-
-
-def enviar_accion(file_name, format_to_convert, file_id):
-    process_to_convert(format_to_convert, file_name)
+    if new_format.upper() == 'TAR.GZ':
+        convert_file_tar_gz(nueva_tarea_id, file)
+    elif new_format.upper() == '7Z':
+        convert_file_7z(nueva_tarea_id, file)
+    elif new_format.upper() == 'TAR.BZ2':
+        convert_file_tar_bz2(nueva_tarea_id, file)
 
 
 
@@ -176,9 +182,44 @@ def callback(message):
         file_name = data[0]
         format_to_convert = data[1]
         file_id = data[2]
-        logging.debug(file_name, format_to_convert, file_id)
-        enviar_accion(file_name, format_to_convert, file_id)
-        message.ack()  # Confirma la recepción del mensaje
+        logging.debug(file_name + "   " + format_to_convert + "   " + file_id)
+        process_to_convert(file_name=file_name, new_format=format_to_convert, nueva_tarea_id=file_id)
+
+
+
+from google.cloud import storage
+
+def upload_file_to_gcs(bucket_name, local_file_path, destination_blob_name):
+    """Sube un archivo local a un bucket de GCS."""
+    # Crea una instancia del cliente de almacenamiento de GCS
+    client = storage.Client()
+    # Obtén una referencia al bucket
+    bucket = client.bucket(bucket_name)
+    # Crea un nuevo blob en el bucket
+    blob = bucket.blob(destination_blob_name)
+    # Carga el archivo local al blob en GCS
+    blob.upload_from_filename(local_file_path)
+    for attempt in range(max_retries):
+        try:
+            # Carga el archivo en el objeto Blob
+            blob.upload_from_filename(local_file_path)
+
+            # Obtiene la URL pública del archivo subido
+            url = blob.public_url
+
+            return url
+        except (GoogleAPICallError, exceptions.GoogleCloudError, exceptions.RetryError) as e:
+            if attempt < max_retries - 1:
+                # En caso de error, se hace un nuevo intento
+                print(
+                    f"Error al cargar el archivo en Google Cloud Storage. Intento {attempt + 1}/{max_retries}. Error: {e}")
+            else:
+                logging.error(
+                    "Error al cargar el archivo en Google Cloud Storage. Se excedió el número máximo de intentos.")
+                # Si todos los intentos fallan, se lanza una excepción
+                return
+
+
 
 
 def subscribe():
