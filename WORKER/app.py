@@ -3,7 +3,7 @@ from google.api_core.exceptions import GoogleAPICallError
 from google.cloud import exceptions
 
 
-from modelos import db, Tarea
+from .modelos import db, Tarea
 import io
 import shutil
 import tarfile
@@ -13,6 +13,7 @@ from google.cloud import pubsub_v1
 import logging
 from google.cloud import storage
 import os
+import tempfile
 
 bucket_name = 'pruebaapisnube'
 
@@ -23,27 +24,24 @@ logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', level=loggin
 IP = '35.224.208.182'
 
 max_retries = 3
-
-def create_app(config_name):
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://admin:admin@{IP}:5432/apisnube'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['PROPAGATE_EXCEPTIONS'] = True
-    db.init_app(app)
-    return app
-
-
-app = create_app('default')
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://admin:admin@{IP}:5432/apisnube'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
+db.init_app(app)
 app_context = app.app_context()
 app_context.push()
 db.create_all()
+
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=5000)
 
 project_id = 'api-nube-semana-3'
 topic_name = 'my-topic'
 subscriber_name = 'my-subscriber'
 topic_path = f"projects/{project_id}/topics/{topic_name}"
 
-import tempfile
+
 
 
 def download_file_from_gcs(blob_name):
