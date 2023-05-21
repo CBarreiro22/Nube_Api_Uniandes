@@ -1,15 +1,21 @@
 # Usamos una imagen base de Python
 FROM python:3.9
+
 # Establecemos el directorio de trabajo en el contenedor
-WORKDIR WORKER
+WORKDIR /WORKER
+
 # Copiamos los archivos de requerimientos al contenedor
 COPY requirements.txt .
+
 # Instalamos las dependencias del proyecto
 RUN pip install --no-cache-dir -r requirements.txt
+
 # Copiamos los archivos de la aplicación al contenedor
 COPY . /WORKER
+
 # Exponemos el puerto en el que se ejecutará la aplicación
 EXPOSE 5000
 EXPOSE 5432
+
 # Definimos el comando por defecto que se ejecutará cuando el contenedor inicie
-CMD ["python", "app.py"]
+CMD ["flask", "run", "--host=0.0.0.0"]
