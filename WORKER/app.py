@@ -15,7 +15,7 @@ bucket_name = 'pruebaapisnube'
 # Configuración del registro para la consola
 logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', level=logging.DEBUG)
 
-IP = '10.188.0.4'
+IP = '35.224.208.182'
 
 
 app = Flask(__name__)
