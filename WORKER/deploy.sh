@@ -7,10 +7,10 @@ gcloud run deploy prueba \
   --allow-unauthenticated \
   --max-instances=1 \
   --port=5000
-gcloud compute firewall-rules create prueba-cloud \
---allow=tcp:5432 \
---destination-ranges=10.188.0.0/24 \
---direction=EGRESS \
---network=red-new \
---target-tags=vpc-tag
+#gcloud compute firewall-rules create prueba-cloud \
+#--allow=tcp:5432 \
+#--destination-ranges=10.188.0.0/24 \
+#--direction=EGRESS \
+#--network=red-new \
+#--target-tags=vpc-tag
 
