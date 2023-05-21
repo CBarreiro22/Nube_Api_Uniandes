@@ -3,7 +3,7 @@ from google.api_core.exceptions import GoogleAPICallError
 from google.cloud import exceptions
 
 
-from .modelos import db, Tarea
+from modelos import db, Tarea
 import io
 import shutil
 import tarfile
