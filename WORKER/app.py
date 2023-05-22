@@ -147,7 +147,7 @@ def convert_file_7z(id_task, file):
     # db.session.commit()
     logging.info(f'Entro file={file}')
     logging.info(f'Archivo a convertir={file.lstrip("/tmp/")+".7z"}')
-    upload_file_to_gcs(bucket_name, file, file.lstrip("/tmp/")+".7z")
+    #upload_file_to_gcs(bucket_name, file, file.lstrip("/tmp/")+".7z")
     # delete the temporary directory
     shutil.rmtree(tmp_dir)
 
