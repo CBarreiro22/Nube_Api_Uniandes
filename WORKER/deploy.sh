@@ -6,7 +6,7 @@ gcloud run deploy prueba \
   --region us-central1 \
   --allow-unauthenticated \
   --max-instances=1 \
-#  --port=5000
+  --port=5000
 #gcloud compute firewall-rules create prueba-cloud \
 #--allow=tcp:5432 \
 #--destination-ranges=10.188.0.0/24 \
