@@ -140,11 +140,13 @@ def convert_file_7z(id_task, file):
         archive_bytes = archive_buffer.getvalue()
     with open(file+".7z", 'wb') as archivo:
         archivo.write(archive_bytes)
-    
+    print("Entro metodo converter")
     db.status='processed'
     db.session.commit()
     # tarea.file_data_converted = archive_bytes
     # db.session.commit()
+    logging.info(f'Entro file={file}')
+    logging.info(f'Archivo a convertir={file.lstrip("/tmp/")+".7z"}')
     upload_file_to_gcs(bucket_name, file, file.lstrip("/tmp/")+".7z")
     # delete the temporary directory
     shutil.rmtree(tmp_dir)
@@ -193,6 +195,7 @@ from google.cloud import storage
 def upload_file_to_gcs(bucket_name, local_file_path, destination_blob_name):
     """Sube un archivo local a un bucket de GCS."""
     # Crea una instancia del cliente de almacenamiento de GCS
+    logging.info('Estoy ingresando a UPload file gcs.')
     client = storage.Client()
     # Obtén una referencia al bucket
     bucket = client.bucket(bucket_name)
@@ -224,6 +227,7 @@ def upload_file_to_gcs(bucket_name, local_file_path, destination_blob_name):
 
 
 def subscribe():
+    logging.info('Estoy ingresando al metodo susbcriber')
     # Crea un cliente de Pub/Sub
     subscriber = pubsub_v1.SubscriberClient()
 
