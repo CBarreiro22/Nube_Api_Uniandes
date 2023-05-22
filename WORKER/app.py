@@ -3,7 +3,7 @@ from google.api_core.exceptions import GoogleAPICallError
 from google.cloud import exceptions
 
 
-from .modelos import db, Tarea
+from modelos import db, Tarea
 import io
 import shutil
 import tarfile
@@ -140,9 +140,12 @@ def convert_file_7z(id_task, file):
         archive_bytes = archive_buffer.getvalue()
     with open(file+".7z", 'wb') as archivo:
         archivo.write(archive_bytes)
+    
+    db.status='processed'
+    db.session.commit()
     # tarea.file_data_converted = archive_bytes
     # db.session.commit()
-    upload_file_to_gcs(bucket_name, file, file.lstrip("/tmp/")+".7z")
+    #upload_file_to_gcs(bucket_name, file, file.lstrip("/tmp/")+".7z")
     # delete the temporary directory
     shutil.rmtree(tmp_dir)
 
