@@ -10,12 +10,12 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="ip_api_archivos" elementType="Argument">
             <stringProp name="Argument.name">ip_api_archivos</stringProp>
-            <stringProp name="Argument.value">34.117.203.128</stringProp>
+            <stringProp name="Argument.value">api-nube-semana-3.uc.r.appspot.com</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="port_api_archivos" elementType="Argument">
             <stringProp name="Argument.name">port_api_archivos</stringProp>
-            <stringProp name="Argument.value">80</stringProp>
+            <stringProp name="Argument.value">443</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="user" elementType="Argument">
@@ -60,7 +60,7 @@
           </elementProp>
           <stringProp name="HTTPSampler.domain">${ip_api_archivos}</stringProp>
           <stringProp name="HTTPSampler.port">${port_api_archivos}</stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/api/auth/signup</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -118,7 +118,7 @@
           </elementProp>
           <stringProp name="HTTPSampler.domain">${ip_api_archivos}</stringProp>
           <stringProp name="HTTPSampler.port">${port_api_archivos}</stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/api/auth/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -173,8 +173,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">2</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">5</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">30</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -204,7 +204,7 @@
           </elementProp>
           <stringProp name="HTTPSampler.domain">${ip_api_archivos}</stringProp>
           <stringProp name="HTTPSampler.port">${port_api_archivos}</stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/api/tasks</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
